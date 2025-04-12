@@ -1,0 +1,47 @@
+﻿@model IEnumerable<ProductModel>
+@{
+    ViewData["title"] = "Product Listed";
+}
+<h3>List Products</h3>
+<a asp-action="Create" asp-controller="Product">Add Product</a>
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Product Quantity</th>
+            <th scope="col">Product Sold</th>
+            <th scope="col">Product Description</th>
+            <th scope="col">Product Price</th>
+            <th>Capital Price</th>
+            <th scope="col">Product Image</th>
+            <th scope="col">Product Slug</th>
+            <th scope="col">Product Category</th>
+            <th scope="col">Product Brand</th>
+            <th scope="col">Product Manage</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">@item.Id</th>
+                <td>@item.Name</td>
+                <td><b>@item.Quantity</b><br /><a asp-controller="Product" asp-action="AddQuantity" asp-route-Id="@item.Id">Add Quantity</a></td>
+                <td><b>@item.Sold</b></td>
+                <td>@item.Description</td>
+                <td>@item.Price.ToString("#,##0 USD")</td>
+                <td>@item.CapitalPrice.ToString("#,##0 USD")</td>
+                <td><img src="/media/products/@item.Image" width="120"></td>
+                <td>@item.Slug</td>
+                <td>@item.Category.Name</td>
+                <td>@item.Brand.Name</td>
+                <td>
+                    <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="Product" asp-route-Id="@item.Id">Edit</a>
+                    <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="Product" asp-route-Id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        
+    </tbody>
+</table>

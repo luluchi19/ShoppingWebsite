@@ -1,0 +1,32 @@
+﻿@model MomoInfoModel
+
+@{
+    ViewData["title"] = "Momo thông tin";
+}
+
+<body>
+    <h3>List Momo Information</h3>
+
+    <a class="btn btn-primary" asp-action="Index" asp-controller="Order">Back to Orders</a>
+
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th>PaymentMomoId</th>
+                <th>OrderInfo</th>
+                <th>FullName</th>
+                <th>Amount</th>
+                <th>DatePaid</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.OrderId</td>
+                <td>@Model.OrderInfo</td>
+                <td>@Model.FullName</td>
+                <td>@Model.Amount.ToString("#,##0 USD")</td>
+                <td>@Model.DatePaid.ToString("dd/MM/yyyy")</td>
+            </tr>
+        </tbody>
+    </table>
+</body>

@@ -1,0 +1,162 @@
+﻿@model StatisticalModel
+
+@{
+    ViewData["title"] = "Dashboard";
+    
+}
+<h3>Dashboard Statistic</h3>
+
+<div class="row">
+    <div class="col-md-3">
+        <p>Thống kê sản phẩm</p>
+        @ViewBag.CountProduct
+    </div>
+    <div class="col-md-3">
+        <p>Thống kê đơn hàng</p>
+        @ViewBag.CountOrder
+    </div>
+    <div class="col-md-3">
+        <p>Thống kê danh mục</p>
+        @ViewBag.CountCategory
+    </div>
+    <div class="col-md-3">
+        <p>Thống kê người dùng</p>
+        @ViewBag.CountUser
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <h4>Lọc dữ liệu theo: </h4>
+            <select class="filter-select">
+                <option value="30">---Lọc dữ liệu---</option>
+                <option value="7">7 ngày trước</option>
+                <option value="30">Tháng qua</option>
+                <option value="90">3 tháng trước</option>
+                <option value="365">Trong vòng 1 năm</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <h4>Tùy chọn: </h4>
+            <label>Từ ngày</label>
+            <input type="date" class="form-control" id="date_from" asp-for="@Model.DateCreated" />
+            <label>Đến ngày</label>
+            <input type="date" class="form-control" id="date_to" asp-for="@Model.DateCreated" />
+            <button id="filterButton" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+    <div class="row">
+        <h4>Biểu đồ thống kê</h4>
+        <div id="myfirstchart" style="height: 250px;"></div>
+    </div>
+
+</div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var ChartMorris = new Morris.Line({
+                element: 'myfirstchart',
+                data: [],
+                xkey: 'date',
+                
+                ykeys: ['sold', 'quantity', 'revenue', 'profit'],
+                labels: ['Số lượng bán ra', 'Số lượng đơn hàng', 'Doanh thu', 'Lợi nhuận']
+            });
+
+            $.ajax({
+                url: "@Url.Action("GetChartData", "Dashboard")",
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    if(data){
+                        ChartMorris.setData(data.map(function (item){
+                            return {
+                                date: item.date,
+                                sold: item.sold,
+                                quantity: item.quantity,
+                                revenue: item.revenue,
+                                profit: item.profit
+                            };
+                        }));
+                    } else{
+                        console.warn("No data received for Morris Chart update.");
+                        ChartMorris.setData([]);
+                    }
+                },
+                error: function (error) {
+                    console.log("Error fetching data: ", error);
+                }
+            });
+
+            $('.filter-select').on('change', function(){
+                var days = $(this).val();
+                var endDate = new Date();
+                var startDate = new Date(endDate.getTime() - days * 24 * 60 * 60 * 1000);
+
+                $.ajax({
+                    url: "@Url.Action("GetChartDataBySelect", "Dashboard")",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        startDate: startDate.toISOString().split('T')[0],
+                        endDate: endDate.toISOString().split('T')[0]
+                    },
+                    success: function (data) {
+                        if(data){
+                            ChartMorris.setData(data.map(function (item){
+                                return {
+                                    date: item.date,
+                                    sold: item.sold,
+                                    quantity: item.quantity,
+                                    revenue: item.revenue,
+                                    profit: item.profit
+                                };
+                            }));
+                        } else{
+                            console.warn("No data received for Morris Chart update.");
+                            ChartMorris.setData([]);
+                        }
+                    },
+                    error: function (error) {
+                        console.log("Error fetching data: ", error);
+                    }
+                });
+            });
+
+            $("#filterButton").click(function(){
+                var fromDate = $("#date_from").val();
+                var toDate = $("#date_to").val();
+
+                $.ajax({
+                    url: "@Url.Action("FilterData", "Dashboard")",
+                    type: "POST",
+                    data: {
+                        fromDate: fromDate,
+                        toDate: toDate
+                    },
+                    success: function (data) {
+                        if(data){
+                            ChartMorris.setData(data.map(function (item){
+                                return {
+                                    date: item.date,
+                                    sold: item.sold,
+                                    quantity: item.quantity,
+                                    revenue: item.revenue,
+                                    profit: item.profit
+                                };
+                            }));
+                        } else{
+                            console.warn("No data received for Morris Chart update.");
+                            ChartMorris.setData([]);
+                        }
+                    },
+                    error: function (error) {
+                        console.log("Error fetching data: ", error);
+                    }
+                });
+            })
+        });
+        
+    </script>
+}

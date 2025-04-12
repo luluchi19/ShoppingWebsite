@@ -1,0 +1,61 @@
+﻿@model ContactModel
+@{
+    ViewData["title"] = "Edit Contact";
+}
+<h3>Edit Contact</h3>
+<div class="col-md-9">
+    <form asp-action="Edit" asp-controller="Contact" enctype="multipart/form-data" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger">
+        </div>
+        <div class="form-group">
+            <label>Name</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger" />
+        </div>
+        <div class="form-group">
+            <label>Email</label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger" />
+        </div>
+        <div class="form-group">
+            <label>Phone</label>
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger" />
+        </div>
+        <div class="form-group">
+            <label>Map</label>
+            <textarea asp-for="Map" class="form-control"></textarea>
+            <span asp-validation-for="Map" class="text-danger" />
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger" />
+        </div>
+        
+        <div class="form-group">
+            <label>Image</label>
+            <input asp-for="ImageUpload" class="form-control" />
+            <td><img src="/media/logo/@Model.LogoImg" width="120"></td>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary">Update</button>
+        </div>
+    </form>
+    <a asp-action="Index">Back to List Contact</a>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('Description', {
+        enterMode: CKEDITOR.ENTER_BR,  // Khi nhấn Enter, chỉ xuống dòng (không tạo <p>)
+        shiftEnterMode: CKEDITOR.ENTER_BR, // Shift + Enter cũng xuống dòng (không tạo <br>)
+        removeFormatTags: 'p;h1;h2;h3;h4;h5;h6', // Loại bỏ các thẻ format tiêu đề
+        removePlugins: 'elementspath', // Ẩn đường dẫn thẻ HTML dưới chân CKEditor
+        });
+    </script>
+    
+}

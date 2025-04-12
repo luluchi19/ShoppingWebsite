@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["title"] = "List User";
+}
+<h3>List Users</h3>
+
+<a class="btn btn-primary" asp-action="Create" asp-controller="User">Add User</a>
+<table class="table table-responsive" id="myTable">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">UserName</th>
+            <th scope="col">Email</th>
+            <th scope="col">PasswordHash</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var usersWithRoles in Model)
+        {
+            <tr>
+                <td>@usersWithRoles.Id</td>
+                <td>@usersWithRoles.UserName</td>
+                <td>@usersWithRoles.Email</td>
+                <td>@usersWithRoles.PasswordHash</td>
+                <td>@usersWithRoles.PhoneNumber</td>
+                <td>@usersWithRoles.RoleName</td>
+                <td>
+                    @if (usersWithRoles.Id != ViewBag.loggedInUserId)
+                    {
+                        @if(usersWithRoles.RoleName != "Admin"){
+                            <a asp-action="Edit" class="btn btn-warning btn-sm" asp-controller="User" asp-route-Id="@usersWithRoles.Id">Edit</a>
+                            <a asp-action="Delete" class="btn btn-danger btn-sm confirmDeletion" asp-controller="User" asp-route-Id="@usersWithRoles.Id">Delete</a>
+
+                        }
+                    }
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>

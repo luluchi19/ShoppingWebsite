@@ -1,0 +1,14 @@
+﻿@model PaymentResponseModel
+
+@{
+    ViewData["Title"] = "Kết quả thông tin giao dịch thành công bằng Vnpay";
+}
+<h1>Thanh toán VNPAY thành công</h1>
+<h5>Thanh toán VNPAY thành công với:</h5>
+<h6>OrderId: @Model.OrderId</h6>
+<h6>OrderInfo: @Model.OrderDescription</h6>
+<h6>Tổng tiền: @Model.PaymentMethod</h6>
+<h6>Mã giao dịch: @Model.TransactionId</h6>
+<h6>Mã thanh toán: @Model.PaymentId</h6>
+<h5>Xem <a asp-controller="Account" asp-action="History">Lịch sử đơn hàng đã đặt</a></h5>
+
